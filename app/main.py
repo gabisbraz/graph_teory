@@ -17,16 +17,15 @@ class TGrafo:
 
     def add_aresta(self, linha: int, coluna: int):
         """
-        ADICIONA UMA ARESTA DIRECIONADA AO GRAFO ENTRE OS
-        VÉRTICES `LINHA` E `COLUNA`.
+        Adiciona uma aresta direcionada ao grafo entre os vértices
+        `linha` e `coluna`.
 
         Args:
-            linha (int): ÍNDICE DA LINHA (VÉRTICE DE PARTIDA).
-            coluna (int): ÍNDICE DA COLUNA (VÉRTICE DE CHEGADA).
+            linha (int): Índice da linha (vértice de partida).
+            coluna (int): Índice da coluna (vértice de chegada).
         """
-
-        # ADICIONA A ARESTA, DEFININDO O VALOR 1 NA POSIÇÃO ESPECÍFICA DA MATRIZ
-        self.grafo[linha - 1][coluna - 1] = 1
+        # Adiciona a aresta, definindo o valor 1 na posição específica da matriz
+        self.grafo[linha][coluna] = 1
 
     def mostra_matriz(self):
         """
@@ -56,6 +55,7 @@ class TGrafo:
             grau += self.grafo[i][vertice - 1]
         return grau
 
+
     def outDegree(self, vertice: int) -> int:
         """
         CALCULA O GRAU DE SAÍDA DO VÉRTICE, OU SEJA, O NÚMERO DE ARESTAS
@@ -68,12 +68,7 @@ class TGrafo:
         Returns:
             int: O GRAU DE SAÍDA DO VÉRTICE.
         """
-        grau = 0
-        if len(self.grafo) < vertice:
-            return None
-        # PERCORRE A LINHA CORRESPONDENTE AO VÉRTICE E SOMA AS ARESTAS QUE SAEM DO VÉRTICE
-        for i in range(self.vertices):
-            grau += self.grafo[vertice - 1][i]
+        grau = sum(self.grafo[vertice])
         return grau
 
     def ehFonte(self, vertice: int) -> int:
@@ -102,6 +97,23 @@ class TGrafo:
             except TypeError as ex:
                 return 0
         return None
+
+    def ehSimetrico(self) -> int:
+        """
+        Verifica se a matriz de adjacência do grafo é simétrica. Um grafo
+        é considerado simétrico se, para todas as arestas, o vértice `i`
+        estiver conectado ao vértice `j`, então o vértice `j` também deve
+        estar conectado ao vértice `i`.
+
+        Returns:
+            int: Retorna 1 se a matriz é simétrica (grafo não direcionado),
+            caso contrário retorna 0 (grafo direcionado).
+        """
+        for i in range(self.vertices):
+            for j in range(i, self.vertices):
+                if self.grafo[i][j] != self.grafo[j][i]:
+                    return 0
+        return 1
 
     def sorvedouro(self, vertice: int) -> int:
         """
@@ -177,11 +189,6 @@ class TGrafo:
 
     def remove_vertice(self, vertice: int) -> bool:
         """
-        9) Fazer um método que permita remover um vértice do Grafo (não dirigido e dirigido).
-        Não se esqueça de remover as arestas associadas.
-
-        ---
-
         REMOVE UM VÉRTICE ESPECÍFICO DO GRAFO E ATUALIZA A MATRIZ DE ADJACÊNCIA.
 
         Args:
@@ -205,6 +212,21 @@ class TGrafo:
         self.vertices -= 1
 
         return True
+    
+    def eh_completo_direcionado(self) -> int:
+        """
+        Verifica se o grafo direcionado é completo. Um grafo direcionado
+        é considerado completo se, para todos os pares de vértices distintos `(i, j)`,
+        existir uma aresta de `i` para `j` e uma aresta de `j` para `i`.
+
+        Returns:
+            int: Retorna 1 se o grafo é completo, caso contrário retorna 0.
+        """
+        for i in range(self.vertices):
+            for j in range(self.vertices):
+                if i != j and (self.grafo[i][j] == 0 or self.grafo[j][i] == 0):
+                    return 0
+        return 1
 
     def complemento(self) -> list:
         """
@@ -231,30 +253,153 @@ class TGrafo:
                         complemento_grafo[m][n] = 1
 
         return complemento_grafo
-
-    def reduzido(self) -> list:
+    
+    def categoria_conexidade(self) -> int:
         """
-        15) Fazer um método que retorne o grafo reduzido de um grafo direcionado no
-        formato de uma matriz de adjacência.
+        Retorna a categoria de conexidade de um grafo direcionado:
+        - 3 (C3): Grafo fortemente conexo.
+        - 2 (C2): Grafo unicamente conexo.
+        - 1 (C1): Grafo fracamente conexo.
+        - 0 (C0): Grafo desconexo.
 
+        Returns:
+            int: Categoria de conexidade (3 – C3, 2 – C2, 1 – C1 ou 0 – C0).
         """
-        pass
+        def bfs(start, grafo):
+            """
+            Realiza uma busca em largura (BFS) a partir de um vértice inicial `start`
+            e verifica se todos os vértices são alcançáveis.
+            """
+            visitados = [False] * self.vertices
+            fila = [start]
+            visitados[start] = True
+            
+            while fila:
+                v = fila.pop(0)
+                for i in range(self.vertices):
+                    if grafo[v][i] == 1 and not visitados[i]:
+                        fila.append(i)
+                        visitados[i] = True
+            return all(visitados)
 
+        # Verifica a conectividade forte (C3)
+        for i in range(self.vertices):
+            if not bfs(i, self.grafo):  # Verifica se todos os vértices são acessíveis a partir de `i`
+                break
+        else:
+            return 3  # Se todos os vértices são fortemente conectados
+
+        # Cria o grafo inverso (transposto)
+        grafo_transposto = [[self.grafo[j][i] for j in range(self.vertices)] for i in range(self.vertices)]
+        
+        # Verifica a conectividade fraca (C1)
+        for i in range(self.vertices):
+            if not bfs(i, [[1 if self.grafo[j][i] or grafo_transposto[j][i] else 0 for i in range(self.vertices)] for j in range(self.vertices)]):
+                break
+        else:
+            return 1  # Se o grafo é fracamente conexo
+
+        # Verifica se o grafo é unicamente conexo (C2)
+        for i in range(self.vertices):
+            if not bfs(i, self.grafo) or not bfs(i, grafo_transposto):
+                return 0  # Desconexo
+        
+        return 2  # Unicamente conexo (C2)
+
+    
+class TGrafoND:
+    def __init__(self, vertices: int):
+        """
+        Inicializa o grafo não direcionado com uma matriz de adjacência
+        de tamanho `vertices` x `vertices`, permitindo rótulos (valores float)
+        nas arestas.
+
+        Args:
+            vertices (int): Número de vértices do grafo.
+        """
+        self.vertices = vertices
+        self.grafo = [[0.0] * self.vertices for _ in range(self.vertices)]
+
+    def add_aresta(self, linha: int, coluna: int, peso: float):
+        """
+        Adiciona uma aresta não direcionada ao grafo entre os
+        vértices `linha` e `coluna`, com um rótulo `peso`.
+
+        Args:
+            linha (int): Índice da linha (um dos vértices).
+            coluna (int): Índice da coluna (o outro vértice).
+            peso (float): Valor associado à aresta (rótulo).
+        """
+        self.grafo[linha][coluna] = peso
+        self.grafo[coluna][linha] = peso
+
+    def mostra_matriz(self):
+        """
+        Exibe a matriz de adjacência do grafo não direcionado.
+        """
+        print("A MATRIZ DE ADJACÊNCIA É: ")
+        for i in range(self.vertices):
+            print(self.grafo[i])
+
+    def eh_completo_n_direcionado(self) -> int:
+        """
+        Verifica se o grafo não direcionado é completo. Um grafo não direcionado
+        é considerado completo se, para todos os pares de vértices distintos `(i, j)`,
+        existir uma aresta entre `i` e `j`.
+
+        Returns:
+            int: Retorna 1 se o grafo é completo, caso contrário retorna 0.
+        """
+        for i in range(self.vertices):
+            for j in range(self.vertices):
+                if i != j and self.grafo[i][j] == 0:
+                    return 0
+        return 1
+
+    def complemento(self) -> list:
+        """
+        Calcula o grafo complementar não direcionado, ou seja, um grafo que possui as
+        arestas invertidas em relação ao grafo original.
+
+        Returns:
+            list: A matriz de adjacência do grafo complementar não direcionado.
+        """
+        complemento_grafo = [[0.0 if i != j and self.grafo[i][j] != 0 else 1.0 for j in range(self.vertices)] for i in range(self.vertices)]
+        return complemento_grafo
+
+
+# TESTES
 
 # INSTANCIANDO O OBJETO
 grafo = TGrafo(4)
-
-# ADICIONA ARESTAS AO GRAFO
+grafo.add_aresta(0, 1)
 grafo.add_aresta(1, 2)
 grafo.add_aresta(2, 3)
-grafo.add_aresta(3, 4)
-grafo.add_aresta(4, 1)
-
-# VISUALIZA GRAFO RESULTANTE
+grafo.add_aresta(3, 0)
 grafo.mostra_matriz()
+print(grafo.inDegree(2))  # Exemplo de uso
+print(grafo.ehFonte(0))  # Exemplo de uso
+print(grafo.remove_vertice(2))  # Exemplo de uso
+print(grafo.eh_completo_direcionado())
 
-grafo.inDegree(6)
+# INSTANCIANDO O OBJETO DO GRAFO NÃO DIRECIONADO
+grafo_nd = TGrafoND(4)
+grafo_nd.add_aresta(0, 1, 1.5)
+grafo_nd.add_aresta(1, 2, 2.5)
+grafo_nd.add_aresta(2, 3, 3.5)
+grafo_nd.add_aresta(3, 0, 4.5)
+grafo_nd.mostra_matriz()
+print(grafo_nd.eh_completo_n_direcionado())  # Esperado: 0
 
-grafo.ehFonte(5)
-grafo.remove_vertice(2)
-print(1)
+# Exemplo de uso
+grafo = TGrafo(4)
+grafo.add_aresta(0, 1)
+grafo.add_aresta(1, 0)
+grafo.add_aresta(1, 2)
+grafo.add_aresta(2, 1)
+grafo.add_aresta(2, 3)
+grafo.add_aresta(3, 2)
+grafo.add_aresta(3, 0)
+grafo.add_aresta(0, 3)
+
+print(grafo.categoria_conexidade())  # Deve retornar 3 (C3) - fortemente conexo
