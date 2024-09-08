@@ -89,25 +89,25 @@ class TGrafoND:
             return 1
         
 
-def main():
-    # Exemplo de uso
-    gND = TGrafoND(4)
-    gND.insereA(1, 2)
-    gND.insereA(2, 3)
-    gND.insereA(3, 4)
 
-    gND.show()
+# Exemplo de uso
+gND = TGrafoND(4)
+gND.insereA(1, 2)
+gND.insereA(2, 3)
+gND.insereA(3, 4)
 
-    gND.removeA(2, 3)  # Remove a aresta e imprime a matriz junto com a mensagem
+gND.show()
 
-    if gND.completo():
-        print("É um grafo completo")
-    else:
-        print("Não é um grafo completo")
+gND.removeA(2, 3)  # Remove a aresta e imprime a matriz junto com a mensagem
 
-    resultado = gND.tipo_conexidade()
-    if resultado == 0:
-        print("O grafo é conexo")
-    else:
-        print("O grafo é desconexo")
+if gND.completo():
+    print("É um grafo completo")
+else:
+    print("Não é um grafo completo")
+
+resultado = gND.tipo_conexidade()
+if resultado == 0:
+    print("O grafo é conexo")
+else:
+    print("O grafo é desconexo")
 
