@@ -500,6 +500,86 @@ class TGrafo:
         else:
             return 0
 
+    def percurso_profundidade(self, start: int) -> list:
+        """
+        REALIZA UM PERCURSO EM PROFUNDIDADE A PARTIR DE UM VÉRTICE INICIAL.
+
+        Args:
+            start (int): O ÍNDICE DO VÉRTICE INICIAL.
+
+        Returns:
+            list: LISTA DOS VÉRTICES NA ORDEM DO PERCURSO.
+        """
+
+        def dfs(v: int, visitados: list, percurso: list):
+            # MARCA O VÉRTICE 'v' COMO VISITADO E ADICIONA À LISTA DE PERCURSO.
+            visitados[v] = True
+            percurso.append(v)
+            # ITERA SOBRE TODOS OS VÉRTICES PARA ENCONTRAR VIZINHOS NÃO VISITADOS.
+            for i in range(self.vertices):
+                if self.grafo[v][i] == 1 and not visitados[i]:
+                    # CHAMA A FUNÇÃO DFS RECURSIVAMENTE PARA VIZINHOS NÃO VISITADOS.
+                    dfs(i, visitados, percurso)
+
+        # INICIALIZA A LISTA DE VÉRTICES VISITADOS COMO FALSA PARA TODOS.
+        visitados = [False] * self.vertices
+        # INICIALIZA A LISTA DE PERCURSO.
+        percurso = []
+        # INICIA O PERCURSO EM PROFUNDIDADE A PARTIR DO VÉRTICE INICIAL.
+        dfs(start - 1, visitados, percurso)
+        # CONVERTE A LISTA DE VÉRTICES PARA A FORMA ORIGINAL (ADICIONA 1).
+        percurso = [n + 1 for n in percurso]
+        # RETORNA A LISTA DE VÉRTICES NA ORDEM DO PERCURSO.
+        return percurso
+
+    def percurso_largura(self, vertice_inicial: int) -> list:
+        """
+        REALIZA UM PERCURSO EM LARGURA A PARTIR DE UM VÉRTICE INICIAL.
+
+        Args:
+            vertice_inicial (int): O ÍNDICE DO VÉRTICE INICIAL.
+
+        Returns:
+            list: LISTA DOS VÉRTICES NA ORDEM DO PERCURSO.
+        """
+
+        def noAdjacente(n: int, visitados: list):
+            # PROCURA UM VÉRTICE ADJACENTE NÃO VISITADO AO VÉRTICE 'n'.
+            for i in range(self.vertices):
+                if self.grafo[n][i] == 1 and not visitados[i]:
+                    return i
+            return -1
+
+        # INICIALIZA A LISTA DE VÉRTICES VISITADOS COMO FALSA PARA TODOS.
+        visitados = [False] * self.vertices
+        # INICIALIZA A FILA PARA O PERCURSO EM LARGURA.
+        fila = []
+        # INICIALIZA A LISTA DE PERCURSO.
+        percurso = []
+
+        # MARCA O VÉRTICE INICIAL COMO VISITADO E ADICIONA NA FILA.
+        visitados[vertice_inicial - 1] = True
+        fila.append(vertice_inicial - 1)
+
+        # INICIA O PERCURSO EM LARGURA.
+        while fila:
+            # REMOVE O VÉRTICE DO INÍCIO DA FILA.
+            n = fila.pop(0)
+            # ADICIONA O VÉRTICE ATUAL À LISTA DE PERCURSO.
+            percurso.append(n + 1)
+            while True:
+                # ENCONTRA UM VÉRTICE ADJACENTE NÃO VISITADO.
+                m = noAdjacente(n, visitados)
+                if m == -1:
+                    # SE NÃO HÁ MAIS VÉRTICES ADJACENTES NÃO VISITADOS, SAIA DO LOOP INTERNO.
+                    break
+                # ADICIONA O VÉRTICE ADJACENTE À FILA E MARCA COMO VISITADO.
+                fila.append(m)
+                visitados[m] = True
+
+        # RETORNA A LISTA DE VÉRTICES NA ORDEM DO PERCURSO.
+        return percurso
+
 
 if __name__ == "__main__":
     # INSTANCIANDO O OBJETO

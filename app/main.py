@@ -66,3 +66,75 @@ grafo_direcionado_arquivo.leArquivoGrafo(
 #############################################################################
 
 grafo_nao_direcionado = TGrafoND(vertices=4)
+
+# INICIALIZA A MATRIZ DE TAMANHO 4
+grafo_1 = TGrafo(vertices=4)
+
+"""
+    [0, 1, 1, 0]
+    [1, 0, 0, 1]
+    [1, 0, 0, 1]
+    [0, 1, 1, 0]
+"""
+
+# ADICIONA ARESTAS AO GRAFO
+grafo_1.add_aresta(linha=1, coluna=2)
+grafo_1.add_aresta(linha=1, coluna=3)
+grafo_1.add_aresta(linha=2, coluna=1)
+grafo_1.add_aresta(linha=2, coluna=4)
+grafo_1.add_aresta(linha=3, coluna=1)
+grafo_1.add_aresta(linha=3, coluna=4)
+grafo_1.add_aresta(linha=4, coluna=2)
+grafo_1.add_aresta(linha=4, coluna=3)
+
+# IMPRIME A MATRIZ DE ADJACÊNCIA DO GRAFO CRIADO
+grafo_1.mostra_matriz()
+
+# CALCULA O DFS - PERCURSO EM PROFUNDIDADE DA MATRIZ
+percurso_profundidade_1 = grafo_1.percurso_profundidade(1)
+logger.info(f"O PERCURSO PROFUNDIDADE DO GRAFO 1 É: {percurso_profundidade_1}")
+
+# CALCULA O BFS - PERCURSO EM LARGURA DA MATRIZ
+percurso_largura_1 = grafo_1.percurso_largura(1)
+logger.info(f"O PERCURSO LARGURA DO GRAFO 1 É: {percurso_largura_1}")
+
+############################################################################################
+
+# INICIALIZA A MATRIZ DE TAMANHO 4
+grafo_2 = TGrafo(vertices=8)
+
+"""
+    [0, 1, 1, 0, 1, 0, 0, 0]
+    [0, 0, 0, 1, 1, 0, 0, 0]
+    [0, 0, 0, 0, 0, 1, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 1]
+    [0, 0, 0, 0, 0, 0, 0, 1]
+    [0, 0, 0, 0, 1, 0, 1, 0]
+    [0, 0, 0, 0, 0, 0, 0, 1]
+    [0, 0, 0, 0, 0, 0, 0, 0]
+"""
+
+# ADICIONA ARESTAS AO GRAFO
+grafo_2.add_aresta(linha=1, coluna=2)
+grafo_2.add_aresta(linha=1, coluna=3)
+grafo_2.add_aresta(linha=1, coluna=5)
+grafo_2.add_aresta(linha=2, coluna=4)
+grafo_2.add_aresta(linha=2, coluna=5)
+grafo_2.add_aresta(linha=3, coluna=6)
+grafo_2.add_aresta(linha=3, coluna=7)
+grafo_2.add_aresta(linha=4, coluna=8)
+grafo_2.add_aresta(linha=5, coluna=8)
+grafo_2.add_aresta(linha=6, coluna=5)
+grafo_2.add_aresta(linha=6, coluna=7)
+grafo_2.add_aresta(linha=7, coluna=8)
+
+# IMPRIME A MATRIZ DE ADJACÊNCIA DO GRAFO CRIADO
+grafo_2.mostra_matriz()
+
+# CALCULA O DFS - PERCURSO EM PROFUNDIDADE DA MATRIZ
+percurso_profundidade_2 = grafo_2.percurso_profundidade(1)
+logger.info(f"O PERCURSO PROFUNDIDADE DO GRAFO 2 É: {percurso_profundidade_2}")
+
+# CALCULA O BFS - PERCURSO EM LARGURA DA MATRIZ
+percurso_largura_2 = grafo_2.percurso_largura(1)
+logger.info(f"O PERCURSO LARGURA DO GRAFO 2 É: {percurso_largura_2}")
