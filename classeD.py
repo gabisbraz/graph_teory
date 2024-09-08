@@ -71,16 +71,15 @@ class TGrafo:
         else:
             return 0
 
-def main():
-    # Exemplo de uso
-    g = TGrafo(4)
-    g.add_aresta(1, 2)
-    g.add_aresta(3, 2)
-    g.add_aresta(2, 4)
+# Exemplo de uso
+g = TGrafo(4)
+g.add_aresta(1, 2)
+g.add_aresta(3, 2)
+g.add_aresta(2, 4)
 
-    g.mostra_matriz()
+g.mostra_matriz()
 
-    vertice = 4
-    print(f'Grau de entrada do vértice {vertice}: {g.inDegree(vertice)}')
-    print(f'Grau de saída do vértice {vertice}: {g.outDegree(vertice)}')
-    print(f'O vértice {vertice} é um sorvedouro? {g.sorvedouro(vertice)}')
+vertice = 4
+print(f'Grau de entrada do vértice {vertice}: {g.inDegree(vertice)}')
+print(f'Grau de saída do vértice {vertice}: {g.outDegree(vertice)}')
+print(f'O vértice {vertice} é um sorvedouro? {g.sorvedouro(vertice)}')
