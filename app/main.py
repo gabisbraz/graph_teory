@@ -138,3 +138,30 @@ logger.info(f"O PERCURSO PROFUNDIDADE DO GRAFO 2 É: {percurso_profundidade_2}")
 # CALCULA O BFS - PERCURSO EM LARGURA DA MATRIZ
 percurso_largura_2 = grafo_2.percurso_largura(1)
 logger.info(f"O PERCURSO LARGURA DO GRAFO 2 É: {percurso_largura_2}")
+
+############################################################################################
+
+# VERIFICA SE UM VÉRTICE É FONTE
+vertice_eh_fonte = grafo_direcionado.ehFonte(vertice=3)
+logger.info(f"O VÉRTICE 3 É FONTE? {vertice_eh_fonte}")
+
+# LEITURA DO GRAFO A PARTIR DE UM ARQUIVO E CONSTRUÇÃO DA MATRIZ DE ADJACÊNCIA
+grafo_direcionado_arquivo = TGrafo(vertices=0)
+grafo_direcionado_arquivo.leArquivoGrafo(file_name="app/utils/graph_files/grafo_exemplo.txt")
+grafo_direcionado_arquivo.mostra_matriz()
+
+# VERIFICA SE O GRAFO É COMPLETO
+grafo_eh_completo = grafo_direcionado.ehCompleto()
+logger.info(f"O GRAFO É COMPLETO? {grafo_eh_completo}")
+
+# VERIFICA SE DOIS GRAFOS SÃO IGUAIS
+grafo1 = TGrafo(vertices=4)
+grafo1.add_aresta(1, 2)
+grafo1.add_aresta(2, 3)
+
+grafo2 = TGrafo(vertices=4)
+grafo2.add_aresta(1, 2)
+grafo2.add_aresta(2, 3)
+
+sao_iguais = grafo1.saoIguais(grafo2)
+logger.info(f"OS GRAFOS SÃO IGUAIS? {sao_iguais}")

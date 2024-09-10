@@ -431,6 +431,25 @@ class TGrafo:
                         grafo_reduzido[comp_i][comp_j] = 1
 
         return grafo_reduzido
+    
+    def saoIguais(self, outro_grafo) -> bool:
+        """
+        17) VERIFICA SE DOIS GRAFOS DIRECIONADOS SÃO IGUAIS BASEADOS NA MATRIZ DE ADJACÊNCIA.
+
+        Args:
+            outro_grafo (TGrafo): O OUTRO GRAFO A SER COMPARADO.
+
+        Returns:
+            bool: RETORNA TRUE SE OS GRAFOS FOREM IGUAIS, FALSE CASO CONTRÁRIO.
+        """
+        if self.vertices != outro_grafo.vertices:
+            return False
+
+        for i in range(self.vertices):
+            if self.grafo[i] != outro_grafo.grafo[i]:
+                return False
+
+        return True
 
     def matriz_para_lista_adjacencia(self) -> dict:
         """
@@ -461,6 +480,21 @@ class TGrafo:
             lista_adjacencia[i] = vizinhos
 
         return lista_adjacencia
+
+    def ehFonte(self, vertice: int) -> int:
+        """
+        20) VERIFICA SE UM VÉRTICE É UMA FONTE (GRAU DE SAÍDA > 0 E GRAU DE ENTRADA == 0).
+
+        Args:
+            vertice (int): O ÍNDICE DO VÉRTICE A SER VERIFICADO.
+
+        Returns:
+            int: RETORNA 1 SE O VÉRTICE FOR UMA FONTE, 0 CASO CONTRÁRIO.
+        """
+        grau_saida = sum(self.grafo[vertice-1])  # SOMA DOS VALORES NA LINHA DO VÉRTICE
+        grau_entrada = sum(self.grafo[i][vertice-1] for i in range(self.vertices))  # SOMA DAS COLUNAS
+
+        return 1 if grau_saida > 0 and grau_entrada == 0 else 0
 
     def verifica_sorvedor(self, vertice: int) -> int:
         """
@@ -499,6 +533,46 @@ class TGrafo:
             return 1
         else:
             return 0
+
+    def leArquivoGrafo(self, file_name: str):
+        """
+        23) LÊ UM ARQUIVO E CONSTRÓI A MATRIZ DE ADJACÊNCIA DO GRAFO.
+
+        Args:
+            file_name (str): NOME DO ARQUIVO QUE CONTÉM O GRAFO.
+        """
+        try:
+            with open(file_name, 'r') as file:
+                vertices = int(file.readline().strip())
+                self.vertices = vertices
+                self.grafo = [[0] * self.vertices for _ in range(self.vertices)]
+
+                arestas = int(file.readline().strip())
+
+                for linha in file:
+                    u, v = map(int, linha.strip().split())
+                    self.add_aresta(u, v)
+
+        except FileNotFoundError:
+            print(f"ARQUIVO {file_name} NÃO ENCONTRADO.")
+        except ValueError:
+            print("FORMATO DE ARQUIVO INVÁLIDO.")
+
+
+    def ehCompleto(self) -> int:
+        """
+        26) VERIFICA SE O GRAFO É COMPLETO.
+        UM GRAFO DIRECIONADO É CONSIDERADO COMPLETO SE, PARA TODOS OS PARES
+        DE VÉRTICES DISTINTOS (I, J), EXISTIR UMA ARESTA DE I PARA J.
+
+        Returns:
+            int: RETORNA 1 SE O GRAFO FOR COMPLETO, 0 CASO CONTRÁRIO.
+        """
+        for i in range(self.vertices):
+            for j in range(self.vertices):
+                if i != j and self.grafo[i][j] == 0:
+                    return 0
+        return 1
 
     def percurso_profundidade(self, start: int) -> list:
         """
