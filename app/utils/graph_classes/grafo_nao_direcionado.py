@@ -29,45 +29,33 @@ class TGrafoND:
         for i in range(self.vertices):
             logger.info(self.grafo[i])
 
-    def insereA(self, u: int, v: int):
+    def insereA(self, u: int, v: int, peso: float = 1.0):
         """
-        7)	Criar uma outra classe TGrafoND e modifique as funções insereA,
-        removeA e show para representar um grafo não-dirigido
-        utilizando matriz de adjacência.
-
-        ---
-
-        INSERE UMA ARESTA ENTRE OS VÉRTICES U E V EM UM GRAFO NÃO-DIRIGIDO.
+        INSERE UMA ARESTA ENTRE OS VÉRTICES U E V EM UM GRAFO NÃO-DIRIGIDO, COM OU SEM RÓTULO.
 
         Args:
-            U (int): O ÍNDICE DO VÉRTICE DE ORIGEM (1-INDEXADO).
-            V (int): O ÍNDICE DO VÉRTICE DE DESTINO (1-INDEXADO).
+            u (int): O ÍNDICE DO VÉRTICE DE ORIGEM (1-INDEXADO).
+            v (int): O ÍNDICE DO VÉRTICE DE DESTINO (1-INDEXADO).
+            peso (float, opcional): O PESO/RÓTULO DA ARESTA ENTRE U E V (PADRÃO = 1.0).
         """
-        # ADICIONA UMA ARESTA ENTRE U E V (NÃO DIRIGIDO)
-        self.grafo[u - 1][v - 1] = 1
-        self.grafo[v - 1][u - 1] = 1
+        # ADICIONA UMA ARESTA ENTRE U E V (NÃO DIRIGIDO) COM UM PESO (FLOAT)
+        self.grafo[u - 1][v - 1] = peso
+        self.grafo[v - 1][u - 1] = peso
         # INFORMA A INSERÇÃO E MOSTRA A MATRIZ DE ADJACÊNCIA ATUALIZADA
-        logger.info(f"ARESTA INSERIDA ENTRE OS VÉRTICES {u} E {v}.")
+        logger.info(f"ARESTA INSERIDA ENTRE OS VÉRTICES {u} E {v} COM PESO {peso}.")
         self.show()
 
     def removeA(self, u: int, v: int):
         """
-        7)	Criar uma outra classe TGrafoND e modifique as funções insereA,
-        removeA e show para representar um grafo não-dirigido
-        utilizando matriz de adjacência.
-
-        ---
-
-        REMOVE A ARESTA ENTRE OS VÉRTICES U E V EM UM GRAFO NÃO-DIRIGIDO E EXIBE A MATRIZ RESULTANTE.
+        REMOVE A ARESTA ENTRE OS VÉRTICES U E V EM UM GRAFO NÃO-DIRIGIDO.
 
         Args:
-            U (int): O ÍNDICE DO VÉRTICE DE ORIGEM (1-INDEXADO).
-            V (int): O ÍNDICE DO VÉRTICE DE DESTINO (1-INDEXADO).
+            u (int): O ÍNDICE DO VÉRTICE DE ORIGEM (1-INDEXADO).
+            v (int): O ÍNDICE DO VÉRTICE DE DESTINO (1-INDEXADO).
         """
         # REMOVE A ARESTA ENTRE U E V (NÃO DIRIGIDO)
         self.grafo[u - 1][v - 1] = 0
         self.grafo[v - 1][u - 1] = 0
-
         # INFORMA A REMOÇÃO E MOSTRA A MATRIZ DE ADJACÊNCIA ATUALIZADA
         logger.info(f"ARESTA REMOVIDA ENTRE OS VÉRTICES {u} E {v}.")
         self.show()
@@ -259,7 +247,7 @@ if __name__ == "__main__":
 
     gND.removeA(2, 3)  # Remove a aresta e imprime a matriz junto com a mensagem
 
-    if gND.completo():
+    if gND.ehCompleto():
         logger.info("É um grafo completo")
     else:
         logger.info("Não é um grafo completo")
@@ -269,3 +257,12 @@ if __name__ == "__main__":
         logger.info("O grafo é conexo")
     else:
         logger.info("O grafo é desconexo")
+
+    # CRIA UM GRAFO NÃO DIRECIONADO
+    grafo_nao_direcionado = TGrafoND(vertices=4)
+
+    # ADICIONA ARESTAS ROTULADAS (FLOAT)
+    grafo_nao_direcionado.insereA(1, 2, 1.5)
+    grafo_nao_direcionado.insereA(2, 3, 2.3)
+
+    grafo_nao_direcionado.show()

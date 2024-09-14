@@ -49,6 +49,10 @@ logger.info(f"GRAU DE SAÍDA DO VÉRTICE 4: {grau_entrada_4}")
 vertice_eh_fonte = grafo_direcionado.ehFonte(vertice=3)
 logger.info(f"VÉRTICE 3 É FONTE? {vertice_eh_fonte}")
 
+# VERIFICA SE O GRAFO É SIMÉTRICO
+grafo_eh_simetrico = grafo_direcionado.ehSimetrico()
+logger.info(f"GRAFO É SIMÉTRICO? {grafo_eh_simetrico}")
+
 # VERIFICA SE UM VÉRTICE É SORVEDOURO
 vertice_eh_sorvedouro = grafo_direcionado.sorvedouro(vertice=3)
 logger.info(f"VÉRTICE 3 É SORVEDOURO? {vertice_eh_sorvedouro}")
@@ -165,3 +169,4 @@ grafo2.add_aresta(2, 3)
 
 sao_iguais = grafo1.saoIguais(grafo2)
 logger.info(f"OS GRAFOS SÃO IGUAIS? {sao_iguais}")
+
