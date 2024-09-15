@@ -502,7 +502,7 @@ class TGrafo:
 
     def percurso_profundidade(self, start: int) -> list:
         """
-        REALIZA UM PERCURSO EM PROFUNDIDADE A PARTIR DE UM VÉRTICE INICIAL.
+        EXTRA 01) REALIZA UM PERCURSO EM PROFUNDIDADE A PARTIR DE UM VÉRTICE INICIAL.
 
         Args:
             start (int): O ÍNDICE DO VÉRTICE INICIAL.
@@ -534,7 +534,7 @@ class TGrafo:
 
     def percurso_largura(self, vertice_inicial: int) -> list:
         """
-        REALIZA UM PERCURSO EM LARGURA A PARTIR DE UM VÉRTICE INICIAL.
+        EXTRA 02) REALIZA UM PERCURSO EM LARGURA A PARTIR DE UM VÉRTICE INICIAL.
 
         Args:
             vertice_inicial (int): O ÍNDICE DO VÉRTICE INICIAL.
@@ -579,6 +579,42 @@ class TGrafo:
 
         # RETORNA A LISTA DE VÉRTICES NA ORDEM DO PERCURSO.
         return percurso
+
+    def ordenacaoTopologica(self) -> list:
+        """
+        EXTRA 03) REALIZA A ORDENAÇÃO TOPOLOGICA USANDO O ALGORITMO DE KAHN.
+
+        Returns:
+            list: UMA LISTA COM A ORDEM TOPOLOGICA DOS VÉRTICES.
+        """
+
+        ordem_topologica = []
+
+        grau_entrada = [0] * self.vertices
+        for i in range(self.vertices):
+            for j in range(self.vertices):
+                if self.grafo[i][j] == 1:
+                    grau_entrada[j] += 1
+
+        fila = []
+        for i in range(self.vertices):
+            if grau_entrada[i] == 0:
+                fila.append(i)
+
+        while fila:
+            v = fila.pop(0)
+            ordem_topologica.append(v)
+
+            for i in range(self.vertices):
+                if self.grafo[v][i] == 1:
+                    grau_entrada[i] -= 1
+                    if grau_entrada[i] == 0:
+                        fila.append(i)
+
+        if len(ordem_topologica) != self.vertices:
+            return []
+
+        return ordem_topologica
 
 
 if __name__ == "__main__":
