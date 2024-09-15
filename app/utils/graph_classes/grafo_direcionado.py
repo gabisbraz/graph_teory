@@ -666,3 +666,94 @@ class TGrafo:
             return []
 
         return ordem_topologica
+
+    def add_vertice_lista(self, vertice):
+        """
+        ADICIONA UM VÉRTICE AO GRAFO.
+
+        Args:
+            vertice (str): O IDENTIFICADOR DO VÉRTICE.
+        """
+        if vertice not in self.lista_adjacencia:
+            self.lista_adjacencia[vertice] = []
+
+    def add_aresta_lista(self, u, v):
+        """
+        ADICIONA UMA ARESTA DIRECIONADA DO VÉRTICE U PARA O VÉRTICE V.
+
+        Args:
+            u (str): O IDENTIFICADOR DO VÉRTICE DE ORIGEM.
+            v (str): O IDENTIFICADOR DO VÉRTICE DE DESTINO.
+        """
+        if u in self.lista_adjacencia and v in self.lista_adjacencia:
+            self.lista_adjacencia[u].append(v)
+        else:
+            print(f"Vértices {u} ou {v} não encontrados no grafo.")
+
+    def mostra_lista(self):
+        """
+        EXIBE A LISTA DE ADJACÊNCIA DO GRAFO NO FORMATO DESEJADO.
+        """
+        print("LISTA ORIGINAL:")
+        for vertice, vizinhos in self.lista_adjacencia.items():
+            print(f"{vertice} -> ", end="")
+            vizinhos = [str(i) for i in vizinhos]
+            if vizinhos:
+                print(" -> ".join(vizinhos), end=" ->")
+            print()
+
+    def inverter_vizinhos_lista(self):
+        """
+        #19) Escreva um método que receba um grafo armazenado em lista de adjacência e inverta a lista de adjacência de todos os vértices do grafo.  Por exemplo, se os 4 vizinhos de um certo vértice u aparecem na lista adj[u] na ordem v, w, x, y, então depois da aplicação do método a lista deve conter os mesmos vértices na ordem y, x, w, v. Obs.: Vizinhos são todos os vértices ligados ao vértice u.
+        ---
+        INVERTE A LISTA DE VIZINHOS DE TODOS OS VÉRTICES NO GRAFO E EXIBE ESSA LISTA.
+        """
+
+        print("\nLISTA COM VIZINHOS INVERTIDOS:")
+        for vertice, vizinhos in self.lista_adjacencia.items():
+            print(f"{vertice} -> ", end="")
+            if vizinhos:
+                vizinhos_invertidos = list(reversed(vizinhos))
+                print(" -> ".join(vizinhos_invertidos), end=" ->")
+            print()
+
+    def eh_simetrico_lista(self) -> int:
+        """
+        #22) Escreva um método que receba um grafo dirigido como parâmetro e retorna 1 se o grafo for simétrico e 0 caso contrário. O método deve ser implementado  para a classe TGrafo que utiliza lista de adjacência.
+        ---
+        VERIFICA SE O GRAFO É SIMÉTRICO.
+
+        PARA SER CONSIDERADO SIMÉTRICO, TODAS AS ARESTAS (U, V) DEVEM TER UMA ARESTA
+        CORRESPONDENTE (V, U).
+
+        RETURNS:
+            INT: 1 SE O GRAFO FOR SIMÉTRICO, 0 CASO CONTRÁRIO.
+        """
+        for u, vizinhos in self.lista_adjacencia.items():
+            for v in vizinhos:
+                if u not in self.lista_adjacencia.get(v, []):
+                    return 0
+        return 1
+
+    def remove_vertice_lista(self, vertice):
+        """
+        #25) Fazer um método que permita remover um vértice do Grafo (dirigido). Não se esqueça de remover as arestas associadas.
+        ---
+        REMOVE UM VÉRTICE DO GRAFO E TODAS AS ARESTAS ASSOCIADAS.
+
+        Args:
+            vertice (str): O IDENTIFICADOR DO VÉRTICE A SER REMOVIDO.
+        """
+        if vertice not in self.lista_adjacencia:
+            raise ValueError(f"O vértice {vertice} não está no grafo.")
+
+        # REMOVE TODAS AS REFERÊNCIAS AO VÉRTICE NAS LISTAS DE ADJACÊNCIA
+        for v in list(
+            self.lista_adjacencia.keys()
+        ):  # Cria uma lista para evitar modificação durante iteração
+            if vertice in self.lista_adjacencia[v]:
+                self.lista_adjacencia[v].remove(vertice)
+
+        # REMOVE O VÉRTICE E SUA LISTA DE ADJACÊNCIA
+        del self.lista_adjacencia[vertice]
+        print(f"Vértice {vertice} removido com sucesso!")

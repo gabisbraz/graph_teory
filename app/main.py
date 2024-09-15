@@ -81,6 +81,9 @@ logger.info(f"GRAFO REDUZIDO: {grafo_reduzido}")
 matriz_para_lista = grafo_direcionado.matriz_para_lista_adjacencia()
 logger.info(f"LISTA DE ADJACÊNCIA: {matriz_para_lista}")
 
+
+grafo_direcionado.mostra_lista()
+
 # 21) VERIFICA SORVEDOURO --> LISTA DE ADJACÊNCIA
 verifica_sorvedouro = grafo_direcionado.verifica_sorvedor(vertice=1)
 logger.info(f"VÉRTICE 4 É SORVEDOURO? {verifica_sorvedouro}")
@@ -115,11 +118,11 @@ lista_adjacencia = grafo_nao_direcionado.remove_vertice(vertice=2)
 logger.info(f"LISTA DE ADJACÊNCIA APÓS REMOÇÃO DO VÉRICE 2: {lista_adjacencia}")
 
 # CALCULA O DFS - PERCURSO EM PROFUNDIDADE DA MATRIZ
-percurso_profundidade_1 = grafo_nao_direcionado.percurso_profundidade(1)
-logger.info(f"O PERCURSO PROFUNDIDADE DO GRAFO 1 É: {percurso_profundidade_1}")
+# percurso_profundidade_1 = grafo_nao_direcionado.percurso_profundidade(1)
+# logger.info(f"O PERCURSO PROFUNDIDADE DO GRAFO 1 É: {percurso_profundidade_1}")
 
-# CALCULA O BFS - PERCURSO EM LARGURA DA MATRIZ
-percurso_largura_1 = grafo_nao_direcionado.percurso_largura(1)
-logger.info(f"O PERCURSO LARGURA DO GRAFO 1 É: {percurso_largura_1}")
+# # CALCULA O BFS - PERCURSO EM LARGURA DA MATRIZ
+# percurso_largura_1 = grafo_nao_direcionado.percurso_largura(1)
+# logger.info(f"O PERCURSO LARGURA DO GRAFO 1 É: {percurso_largura_1}")
 
 ############################################################################################
