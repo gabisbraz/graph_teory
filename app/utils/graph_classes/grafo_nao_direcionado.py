@@ -287,25 +287,3 @@ class TGrafoND:
 
         logger.info(f"VÉRTICE {vertice + 1} REMOVIDO COM SUCESSO!")
         return self.lista_adjacencia
-
-
-if __name__ == "__main__":
-    gND = TGrafoND(4)
-    gND.insereA(1, 2)
-    gND.insereA(2, 3)
-    gND.insereA(3, 4)
-
-    gND.show()
-
-    gND.removeA(2, 3)  # Remove a aresta e imprime a matriz junto com a mensagem
-
-    if gND.completo():
-        logger.info("É um grafo completo")
-    else:
-        logger.info("Não é um grafo completo")
-
-    resultado = gND.tipo_conexidade()
-    if resultado == 0:
-        logger.info("O grafo é conexo")
-    else:
-        logger.info("O grafo é desconexo")

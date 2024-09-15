@@ -666,23 +666,3 @@ class TGrafo:
             return []
 
         return ordem_topologica
-
-
-if __name__ == "__main__":
-    # INSTANCIANDO O OBJETO
-    grafo = TGrafo(4)
-
-    # ADICIONA ARESTAS AO GRAFO
-    grafo.add_aresta(1, 2)
-    grafo.add_aresta(2, 3)
-    grafo.add_aresta(3, 4)
-    grafo.add_aresta(4, 1)
-
-    # VISUALIZA GRAFO RESULTANTE
-    grafo.mostra_matriz()
-
-    grafo.inDegree(6)
-
-    grafo.ehFonte(5)
-    grafo.remove_vertice(2)
-    logger.info(1)
