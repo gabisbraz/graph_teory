@@ -15,6 +15,8 @@ class TGrafo:
         # CRIA A MATRIZ DE ADJACÊNCIA COM TODOS OS VALORES INICIALIZADOS EM 0
         self.grafo = [[0] * self.vertices for i in range(self.vertices)]
 
+        self.lista_adjacencia = {}
+
     def add_aresta(self, linha: int, coluna: int):
         """
         ADICIONA UMA ARESTA DIRECIONADA AO GRAFO ENTRE OS
@@ -29,6 +31,20 @@ class TGrafo:
         self.grafo[linha - 1][coluna - 1] = 1
         logger.success(f"ARESTA ADICIONADA DO VÉRTICES {linha} PARA {coluna}")
 
+    def add_aresta_peso(self, u: int, v: int, peso: float = 1):
+        """
+        16) Modifique a classe TGrafo e os métodos correspondentes para permitir a criação de um grafo direcionado rotulado (valor float) nas arestas.
+        ---
+        ADICIONA UMA ARESTA DIRECIONADA DO VÉRTICE U AO VÉRTICE V.
+
+        ARGS:
+            U (INT): O ÍNDICE DO VÉRTICE DE ORIGEM (1-INDEXADO).
+            V (INT): O ÍNDICE DO VÉRTICE DE DESTINO (1-INDEXADO).
+            PESO (FLOAT): O PESO DA ARESTA.
+        """
+        # AJUSTA PARA INDEXAÇÃO COMEÇANDO EM 1
+        self.grafo[u - 1][v - 1] = peso
+
     def mostra_matriz(self):
         """
         EXIBE A MATRIZ DE ADJACÊNCIA DO GRAFO.
@@ -39,7 +55,15 @@ class TGrafo:
 
     def inDegree(self, vertice: int) -> int:
         """
-        1) CALCULA O GRAU DE ENTRADA DO VÉRTICE, OU SEJA, O NÚMERO DE
+        1) Escreva um método “int inDegree(int v)” que calcula e retorna o
+        grau de entrada de um vértice v de um grafo dirigido. O método
+        deve ser implementado na classe TGrafo da matriz  de adjacência.
+        Obs: Grau de entrada de v é o total de arestas que chegam no
+        vértice v.
+
+        ---
+
+        CALCULA O GRAU DE ENTRADA DO VÉRTICE, OU SEJA, O NÚMERO DE
         ARESTAS QUE ENTRAM NO VÉRTICE ESPECIFICADO.
 
         Args:
@@ -57,7 +81,14 @@ class TGrafo:
 
     def outDegree(self, vertice: int) -> int:
         """
-        2) CALCULA O GRAU DE SAÍDA DO VÉRTICE, OU SEJA, O NÚMERO DE ARESTAS
+        2) Escreva o método outDegree(int v) que calcula o grau de saída
+        de v em grafo dirigido. O método deve ser implementado na classe
+        TGrafo que usa matriz de adjacência. Obs.: Grau de saída de v é o
+        total de arestas que saem do vértice v.
+
+        ---
+
+        CALCULA O GRAU DE SAÍDA DO VÉRTICE, OU SEJA, O NÚMERO DE ARESTAS
         QUE SAEM DO VÉRTICE ESPECIFICADO.
 
         Args:
@@ -97,7 +128,15 @@ class TGrafo:
 
     def sorvedouro(self, vertice: int) -> int:
         """
-        4) VERIFICA SE UM VÉRTICE É UM SORVEDOURO, OU SEJA, SE
+        4) Escreva um método para um grafo direcionado que recebe um vértice
+        como parâmetro, retorne 1 se vértice for um sorvedouro (grau de
+        entrada maior que zero e grau de saída igual a 0), ou 0 caso
+        contrário. O método deve ser implementado para a classe TGrafo
+        que utiliza matriz de adjacência.
+
+        ---
+
+        VERIFICA SE UM VÉRTICE É UM SORVEDOURO, OU SEJA, SE
         POSSUI GRAU DE ENTRADA > 0 E GRAU DE SAÍDA = 0.
 
         Args:
@@ -221,7 +260,7 @@ class TGrafo:
         self.vertices -= 1
 
         # INFORMA A REMOÇÃO E MOSTRA A MATRIZ DE ADJACÊNCIA ATUALIZADA
-        print(
+        logger.info(
             f"VÉRTICE {vertice + 1} E TODAS AS ARESTAS ASSOCIADAS FORAM REMOVIDAS (DIRECIONADO)"
         )
         self.mostra_matriz()
@@ -247,7 +286,7 @@ class TGrafo:
                     return 0  # SE FALTAR ALGUMA CONEXÃO, O GRAFO NÃO É COMPLETO
         return 1  # SE TODAS AS CONEXÕES EXISTIREM, O GRAFO É COMPLETO
 
-    def complemento(self) -> list:
+    def complemento_dirigido(self) -> list:
         """
         12)	Fazer um método que retorne o complemento (grafo complementar) de um grafo
         (dirigido ou não) na forma de uma matriz de adjacência.
@@ -262,19 +301,26 @@ class TGrafo:
         """
         # CRIA UMA CÓPIA DA MATRIZ DE ADJACÊNCIA
         complemento_grafo = self.grafo
+
         # INVERTE OS VALORES DA MATRIZ, EXCETO NA DIAGONAL PRINCIPAL
         for m in range(self.vertices):
             for n in range(self.vertices):
                 if m != n:
-                    if self.grafo[m][n] == 1:
-                        complemento_grafo[m][n] = 0
-                    else:
-                        complemento_grafo[m][n] = 1
+                    complemento_grafo[m][n] = 0 if self.grafo[m][n] == 1 else 1
+
+        logger.info("MATRIZ DE ADJACÊNCIA DO GRAFO COMPLEMENTAR:")
+        for i in range(len(complemento_grafo)):
+            logger.info(complemento_grafo[i])
 
         return complemento_grafo
 
     def categoria_conexidade(self) -> int:
         """
+        14)	Fazer método que retorne a categoria de conexidade para um
+        grafo direcionado (3 – C3, 2 – C2, 1 – C1 ou 0 – c0).
+
+        ---
+
         Retorna a categoria de conexidade de um grafo direcionado:
         - 3 (C3): Grafo fortemente conexo.
         - 2 (C2): Grafo unicamente conexo.
@@ -455,10 +501,12 @@ class TGrafo:
             for j in range(self.vertices):
                 # SE HÁ UMA ARESTA ENTRE O VÉRTICE I E O VÉRTICE J, ADICIONA J NA LISTA DE VIZINHOS
                 if self.grafo[i][j] == 1:
-                    vizinhos.append(j)
+                    vizinhos.append(j + 1)
 
             # ASSOCIA O VÉRTICE I À SUA LISTA DE VIZINHOS NO DICIONÁRIO
-            lista_adjacencia[i] = vizinhos
+            lista_adjacencia[i + 1] = vizinhos
+
+        self.lista_adjacencia = lista_adjacencia
 
         return lista_adjacencia
 
@@ -482,23 +530,26 @@ class TGrafo:
         Returns:
             int: RETORNA 1 SE O VÉRTICE FOR UM SORVEDOURO, CASO CONTRÁRIO RETORNA 0.
         """
+
+        self.matriz_para_lista_adjacencia()
+
         # VERIFICA SE O VÉRTICE ESTÁ NO GRAFO
         if vertice not in self.lista_adjacencia:
-            raise ValueError(f"O vértice {vertice} não está no grafo.")
+            logger.info(f"O vértice {vertice} não está no grafo.")
+            return 0
 
         grau_saida = len(self.lista_adjacencia[vertice])
         grau_entrada = 0
 
         # CALCULA O GRAU DE ENTRADA
-        for v, vizinhos in self.lista_adjacencia.items():
+        for _, vizinhos in self.lista_adjacencia.items():
             if vertice in vizinhos:
                 grau_entrada += 1
 
         # CHECA SE O VÉRTICE É UM SORVEDOURO
         if grau_entrada > 0 and grau_saida == 0:
             return 1
-        else:
-            return 0
+        return 0
 
     def percurso_profundidade(self, start: int) -> list:
         """

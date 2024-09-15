@@ -15,6 +15,8 @@ class TGrafoND:
         # CRIA A MATRIZ DE ADJACÊNCIA COM TODOS OS VALORES INICIALIZADOS EM 0
         self.grafo = [[0] * self.vertices for _ in range(self.vertices)]
 
+        self.lista_adjacencia = {}
+
     def show(self):
         """
         7)	Criar uma outra classe TGrafoND e modifique as funções insereA,
@@ -48,7 +50,7 @@ class TGrafoND:
         self.grafo[v - 1][u - 1] = 1
         # INFORMA A INSERÇÃO E MOSTRA A MATRIZ DE ADJACÊNCIA ATUALIZADA
         logger.info(f"ARESTA INSERIDA ENTRE OS VÉRTICES {u} E {v}.")
-        self.show()
+        # self.show()
 
     def removeA(self, u: int, v: int):
         """
@@ -134,6 +136,75 @@ class TGrafoND:
         # SE NÃO HÁ FALTA DE CONEXÃO ENTRE NENHUM PAR DE VÉRTICES, O GRAFO É COMPLETO
         return True
 
+    def complemento_nao_dirigido(self) -> list:
+        """
+        12)	Fazer um método que retorne o complemento (grafo complementar) de um grafo
+        (dirigido ou não) na forma de uma matriz de adjacência.
+
+        ---
+
+        CALCULA O GRAFO COMPLEMENTAR DE UM GRAFO NÃO DIRECIONADO - POSSUI AS ARESTAS
+        INVERTIDAS EM RELAÇÃO AO GRAFO ORIGINAL, MANTENDO
+        A DIAGONAL PRINCIPAL INALTERADA (SEM LAÇOS).
+
+        Returns:
+            list: A MATRIZ DE ADJACÊNCIA DO GRAFO COMPLEMENTAR.
+        """
+        # CRIA UMA NOVA MATRIZ PARA ARMAZENAR O COMPLEMENTO
+        complemento_grafo = [
+            [0 for _ in range(self.vertices)] for _ in range(self.vertices)
+        ]
+
+        # PERCORRE TODOS OS PARES DE VÉRTICES (M, N)
+        for m in range(self.vertices):
+            for n in range(m, self.vertices):
+                if m != n:
+                    # SE EXISTE UMA ARESTA NO GRAFO ORIGINAL, NÃO EXISTE NO COMPLEMENTO
+                    if self.grafo[m][n] == 1:
+                        complemento_grafo[m][n] = 0
+                        complemento_grafo[n][
+                            m
+                        ] = 0  # SIMETRIA EM GRAFOS NÃO DIRECIONADOS
+                    else:
+                        complemento_grafo[m][n] = 1
+                        complemento_grafo[n][
+                            m
+                        ] = 1  # SIMETRIA EM GRAFOS NÃO DIRECIONADOS
+
+        return complemento_grafo
+
+    def matriz_para_lista_adjacencia(self) -> dict:
+        """
+        18)	Escreva um método que converta uma representação de um grafo em outra. Por exemplo,
+        converta um grafo armazenado em matriz de adjacência em uma lista de adjacência.
+
+        ---
+
+        CONVERTE UMA MATRIZ DE ADJACÊNCIA EM UMA LISTA DE ADJACÊNCIA.
+
+        RETURNS:
+            DICT: UM DICIONÁRIO ONDE CADA CHAVE REPRESENTA UM VÉRTICE E O VALOR ASSOCIADO
+                É UMA LISTA DOS VÉRTICES VIZINHOS (ARESTAS CONECTADAS).
+        """
+        # CRIA UM DICIONÁRIO VAZIO PARA ARMAZENAR A LISTA DE ADJACÊNCIA
+        lista_adjacencia = {}
+
+        # PERCORRE TODOS OS VÉRTICES DO GRAFO
+        for i in range(self.vertices):
+            # INICIALIZA A LISTA DE VIZINHOS PARA O VÉRTICE ATUAL
+            vizinhos = []
+            for j in range(self.vertices):
+                # SE HÁ UMA ARESTA ENTRE O VÉRTICE I E O VÉRTICE J, ADICIONA J NA LISTA DE VIZINHOS
+                if self.grafo[i][j] == 1:
+                    vizinhos.append(j + 1)
+
+            # ASSOCIA O VÉRTICE I À SUA LISTA DE VIZINHOS NO DICIONÁRIO
+            lista_adjacencia[i + 1] = vizinhos
+
+        self.lista_adjacencia = lista_adjacencia
+
+        return lista_adjacencia
+
     def tipo_conexidade(self) -> int:
         """
         13)	Fazer um método que retorne o tipo de conexidade de um grafo não direcionado
@@ -172,43 +243,6 @@ class TGrafoND:
         else:
             return 1  # O GRAFO É DESCONEXO
 
-    def complemento(self) -> list:
-        """
-        12)	Fazer um método que retorne o complemento (grafo complementar) de um grafo
-        (dirigido ou não) na forma de uma matriz de adjacência.
-
-        ---
-
-        CALCULA O GRAFO COMPLEMENTAR DE UM GRAFO NÃO DIRECIONADO - POSSUI AS ARESTAS
-        INVERTIDAS EM RELAÇÃO AO GRAFO ORIGINAL, MANTENDO
-        A DIAGONAL PRINCIPAL INALTERADA (SEM LAÇOS).
-
-        Returns:
-            list: A MATRIZ DE ADJACÊNCIA DO GRAFO COMPLEMENTAR.
-        """
-        # CRIA UMA NOVA MATRIZ PARA ARMAZENAR O COMPLEMENTO
-        complemento_grafo = [
-            [0 for _ in range(self.vertices)] for _ in range(self.vertices)
-        ]
-
-        # PERCORRE TODOS OS PARES DE VÉRTICES (M, N)
-        for m in range(self.vertices):
-            for n in range(m, self.vertices):
-                if m != n:
-                    # SE EXISTE UMA ARESTA NO GRAFO ORIGINAL, NÃO EXISTE NO COMPLEMENTO
-                    if self.grafo[m][n] == 1:
-                        complemento_grafo[m][n] = 0
-                        complemento_grafo[n][
-                            m
-                        ] = 0  # SIMETRIA EM GRAFOS NÃO DIRECIONADOS
-                    else:
-                        complemento_grafo[m][n] = 1
-                        complemento_grafo[n][
-                            m
-                        ] = 1  # SIMETRIA EM GRAFOS NÃO DIRECIONADOS
-
-        return complemento_grafo
-
     def remove_vertice(self, vertice: int):
         """
         24)	Fazer um método que permita remover um vértice do Grafo (não dirigido).
@@ -222,31 +256,37 @@ class TGrafoND:
             vertice (int): O ÍNDICE DO VÉRTICE A SER REMOVIDO (1-INDEXADO).
 
         """
-        if vertice < 1 or vertice > self.vertices:
-            raise ValueError(f"O vértice {vertice} não está no intervalo válido.")
+        self.matriz_para_lista_adjacencia()
 
-        # CONVERTE O ÍNDICE DO VÉRTICE DE 1-INDEXADO PARA 0-INDEXADO
+        logger.info(
+            f"LISTA DE ADJACÊNCIA ANTERIOR A REMOÇÃO DO VÉRTICE: {self.lista_adjacencia}"
+        )
+
+        # Converte o índice do vértice de 1-indexado para 0-indexado
         vertice -= 1
 
-        # REMOVE O VÉRTICE E AS ARESTAS ASSOCIADAS DA MATRIZ DE ADJACÊNCIA
+        if vertice < 0 or vertice >= self.vertices:
+            logger.info(f"O vértice {vertice + 1} não está no intervalo válido.")
+            return
+
+        # Remove o vértice da lista de adjacência
+        for v in self.lista_adjacencia:
+            if vertice + 1 in self.lista_adjacencia[v]:
+                self.lista_adjacencia[v].remove(vertice + 1)
+
+        # Remove o vértice do dicionário
+        del self.lista_adjacencia[vertice + 1]
+
+        # Atualiza os índices dos vértices no dicionário
+        for v in self.lista_adjacencia:
+            if v > vertice + 1:
+                self.lista_adjacencia[v - 1] = self.lista_adjacencia.pop(v)
+
+        # Atualiza o número de vértices
         self.vertices -= 1
 
-        # CRIA UMA NOVA MATRIZ DE ADJACÊNCIA MENOR
-        nova_matriz = [[0 for _ in range(self.vertices)] for _ in range(self.vertices)]
-
-        # COPIA OS VALORES DA MATRIZ ORIGINAL PARA A NOVA MATRIZ, EXCLUINDO A LINHA E COLUNA DO VÉRTICE REMOVIDO
-        for i in range(self.vertices + 1):
-            if i == vertice:
-                continue
-            for j in range(self.vertices + 1):
-                if j == vertice:
-                    continue
-                nova_matriz[i - (i > vertice)][j - (j > vertice)] = self.grafo[i][j]
-
-        self.grafo = nova_matriz
-
-        print(f"VÉRTICE {vertice + 1} REMOVIDO COM SUCESSO!")
-        self.show()
+        logger.info(f"VÉRTICE {vertice + 1} REMOVIDO COM SUCESSO!")
+        return self.lista_adjacencia
 
 
 if __name__ == "__main__":
