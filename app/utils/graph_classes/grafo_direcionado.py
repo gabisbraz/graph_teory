@@ -476,6 +476,10 @@ class TGrafo:
                     if comp_i != comp_j:
                         grafo_reduzido[comp_i][comp_j] = 1
 
+        logger.debug("O GRAFO REDUZIDO É:")
+        for i in range(len(grafo_reduzido)):
+            logger.info(grafo_reduzido[i])
+
         return grafo_reduzido
 
     def matriz_para_lista_adjacencia(self) -> dict:
