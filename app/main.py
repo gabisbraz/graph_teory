@@ -15,6 +15,7 @@ from utils.graph_classes.grafo_nao_direcionado import TGrafoND
 5  0  1  1  1  0
 """
 
+
 # INICIALIZA A MATRIZ DE TAMANHO 5
 grafo_direcionado = TGrafo(vertices=5)
 
@@ -32,6 +33,8 @@ grafo_direcionado.add_aresta(linha=5, coluna=4)
 
 # MOSTRA MATRIZ
 grafo_direcionado.mostra_matriz()
+
+logger.info(grafo_direcionado.reduzido())
 
 # 1) GRAU DE ENTRADA DO VÉRTICE
 grau_entrada_1 = grafo_direcionado.inDegree(vertice=1)
@@ -126,3 +129,37 @@ logger.info(f"LISTA DE ADJACÊNCIA APÓS REMOÇÃO DO VÉRICE 2: {lista_adjacenc
 # logger.info(f"O PERCURSO LARGURA DO GRAFO 1 É: {percurso_largura_1}")
 
 ############################################################################################
+
+
+# INICIALIZA A MATRIZ DE TAMANHO 5
+grafo_direcionado = TGrafo(vertices=10)
+
+# ADICIONA ARESTAS AO GRAFO
+grafo_direcionado.add_aresta(linha=1, coluna=4)
+
+grafo_direcionado.add_aresta(linha=2, coluna=1)
+grafo_direcionado.add_aresta(linha=2, coluna=3)
+
+grafo_direcionado.add_aresta(linha=4, coluna=7)
+grafo_direcionado.add_aresta(linha=4, coluna=5)
+
+grafo_direcionado.add_aresta(linha=5, coluna=2)
+grafo_direcionado.add_aresta(linha=5, coluna=6)
+grafo_direcionado.add_aresta(linha=5, coluna=8)
+
+grafo_direcionado.add_aresta(linha=6, coluna=3)
+grafo_direcionado.add_aresta(linha=6, coluna=9)
+
+grafo_direcionado.add_aresta(linha=7, coluna=10)
+
+grafo_direcionado.add_aresta(linha=8, coluna=7)
+grafo_direcionado.add_aresta(linha=8, coluna=9)
+
+grafo_direcionado.add_aresta(linha=9, coluna=6)
+
+grafo_direcionado.add_aresta(linha=10, coluna=8)
+grafo_direcionado.add_aresta(linha=10, coluna=9)
+
+# MOSTRA MATRIZ
+grafo_direcionado.mostra_matriz()
+grafo_direcionado.reduzido()
